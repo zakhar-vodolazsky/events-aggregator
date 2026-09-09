@@ -5,3 +5,4 @@ class EventStatus(StrEnum):
     PUBLISHED = "published"
     ARCHIVED = "archived"
     CANCELED = "canceled"
+    CLOSED = "registration closed"
