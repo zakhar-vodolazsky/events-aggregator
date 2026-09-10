@@ -8,6 +8,26 @@ permissions:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: events_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d events_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+asyncpg://test:test@localhost:5432/events_test
+      EVENTS_API_KEY: test-key
+      EVENTS_API_URL: https://provider.test
+      SYNC_ENABLED: "false"
+      RUN_DB_TESTS: "1"
     steps:
       - name: Download repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -28,6 +48,11 @@ jobs:
 
       - name: Run tests
         run: uv run python -m pytest -q
+
+      - name: Check migrations
+        run: |
+          uv run alembic upgrade head
+          uv run alembic check
 
   build:
     needs: lint
