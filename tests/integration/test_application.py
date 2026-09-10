@@ -172,7 +172,7 @@ async def full_lifecycle():
             "email": "ivan@example.com",
             "seat": "A1",
         }
-        assert (await client.post("/api/tickets", json=body | {"email": "bad"})).status_code == 422
+        assert (await client.post("/api/tickets", json=body | {"email": "bad"})).status_code == 400
         assert (await client.post("/api/tickets", json=body | {"seat": "C1"})).status_code == 400
         created = await client.post("/api/tickets/", json=body)
         assert created.status_code == 201, created.text

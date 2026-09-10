@@ -2,6 +2,8 @@ import logging
 
 import httpx
 from fastapi import FastAPI
+from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
@@ -9,6 +11,13 @@ from app.domain.schemas import BusinessError
 
 
 def register_error_handlers(app: FastAPI):
+    @app.exception_handler(RequestValidationError)
+    async def validation_error(request, exc):
+        response = await request_validation_exception_handler(request, exc)
+        if request.method == "POST" and request.url.path.rstrip("/") == "/api/tickets":
+            response.status_code = 400
+        return response
+
     @app.exception_handler(BusinessError)
     async def business_error(_request, exc):
         return JSONResponse({"detail": exc.message}, status_code=exc.status_code)
