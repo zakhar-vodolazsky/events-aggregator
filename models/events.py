@@ -39,5 +39,11 @@ class Event(Base):
     )
     changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), index=True)
     status_changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), index=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    status_updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
     place: Mapped[Place] = relationship("Place", back_populates="events")
     tickets: Mapped[list[Ticket]] = relationship("Ticket", back_populates="event")
