@@ -1,5 +1,4 @@
 from collections.abc import AsyncIterator
-from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends
@@ -18,7 +17,6 @@ engine = create_async_engine(
 SessionFactory = async_sessionmaker(bind=engine, expire_on_commit=False)
 
 
-@lru_cache
 async def get_session() -> AsyncIterator[AsyncSession]:
     async with SessionFactory() as session:
         yield session
