@@ -6,6 +6,7 @@ dependencies = [
     "alembic>=1.19.2",
     "asyncpg>=0.31.0",
     "fastapi>=0.141.1",
+    "httpx>=0.28.1",
     "pydantic>=2.13.5",
     "pydantic-settings>=2.15.0",
     "sqlalchemy[asyncio]>=2.0.52",
@@ -14,6 +15,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pytest>=9.1.1",
     "ruff>=0.16.6",
 ]
 
@@ -38,3 +40,7 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
